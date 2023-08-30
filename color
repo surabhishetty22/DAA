@@ -1,0 +1,69 @@
+from collections import defaultdict
+
+class Graph:
+    def __init__(self, subjects):
+        self.subjects = subjects
+        self.graph = defaultdict(list)
+    
+    def add_edge(self, subject1, subject2):
+        self.graph[subject1].append(subject2)
+        self.graph[subject2].append(subject1)
+
+    def graph_coloring(self):
+        color_map = {}
+        available_colors = set(range(1, len(self.subjects) + 1))
+        for subject in self.subjects:
+            used_colors = set()
+            for neighbor in self.graph[subject]:
+                if neighbor in color_map:
+                    used_colors.add(color_map[neighbor])
+
+            available_colors = available_colors - used_colors
+
+            if available_colors:
+                color_map[subject] = min(available_colors)
+            else:
+                color_map[subject] = len(available_colors) + 1
+                available_colors.add(color_map[subject])
+        return color_map
+
+    def get_minimum_time_slots(self):
+        color_map = self.graph_coloring()
+        return max(color_map.values())
+
+num_subjects = int(input("Enter the number of subjects: "))
+subjects = []
+for _ in range(num_subjects):
+    subject_name = input("Enter subject name: ")
+    subjects.append(subject_name)
+
+students = {}
+for subject in subjects:
+    student_list = input(f"Enter students enrolled in {subject} (comma-separated): ").split(',')
+    students[subject] = [student.strip() for student in student_list]
+
+graph = Graph(subjects)
+
+num_edges = int(input("Enter the number of connections between subjects: "))
+for _ in range(num_edges):
+    subject1, subject2 = input("Enter subjects connected by an edge (space-separated): ").split()
+    graph.add_edge(subject1, subject2)
+
+minimum_time_slots = graph.get_minimum_time_slots()
+print(f"Minimum time slots required: {minimum_time_slots}")
+/////////////////////////////////////////////////////////////////
+  Enter the number of subjects: 4
+Enter subject name: m
+Enter subject name: p
+Enter subject name: c
+Enter subject name: b
+Enter students enrolled in m (comma-separated): a,b,c
+Enter students enrolled in p (comma-separated): a,c,d
+Enter students enrolled in c (comma-separated): b,d,e
+Enter students enrolled in b (comma-separated): a,d,e
+Enter the number of connections between subjects: 4
+Enter subjects connected by an edge (space-separated): m p
+Enter subjects connected by an edge (space-separated): m c
+Enter subjects connected by an edge (space-separated): p c
+Enter subjects connected by an edge (space-separated): p b
+Minimum time slots required: 3
