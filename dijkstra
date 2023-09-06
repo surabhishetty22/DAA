@@ -41,7 +41,7 @@ def find_optimal_route(graph, start, destination):
     route.reverse()
     return route
 
-# Get user input for the graph
+
 graph = {}
 num_edges = int(input("Enter the number of edges in the graph: "))
 print("Enter the edges in the format 'node1 node2 weight':")
@@ -54,15 +54,9 @@ for _ in range(num_edges):
         graph[node2] = {}
     graph[node1][node2] = weight
     graph[node2][node1] = weight
-
-# Get user input for the start and destination nodes
 start_node = input("Enter the start node: ")
 destination_node = input("Enter the destination node: ")
-
-# Find the optimal route
 route = find_optimal_route(graph, start_node, destination_node)
-
-# Print the result
 if route is None:
     print("No route found.")
 else:
